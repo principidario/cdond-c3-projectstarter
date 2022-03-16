@@ -189,7 +189,7 @@ deploy-infrastructure:
 #             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Add back-end ip to ansible inventory
-          command: ||
+          command: |
             export BACKEND_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-*" --query "Reservations[].Instances[].PublicDnsName[]" | grep ec2 | sed 's/\"//g' | sed 's/ //g')
 #           export BACKEND_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query "Reservations[].Instances[].PublicDnsName[]" | grep ec2 | sed 's/\"//g' | sed 's/ //g')
             echo $BACKEND_IP >> .circleci/ansible/inventory.txt
