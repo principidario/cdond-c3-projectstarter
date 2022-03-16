@@ -158,7 +158,7 @@ jobs:
                 }
               ]
             }
-          event: on_fail
+          event: fail
 
 
 # deploy-infrastructure:
