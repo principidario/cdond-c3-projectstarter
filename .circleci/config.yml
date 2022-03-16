@@ -162,7 +162,7 @@ scan-backend:
           event: fail
 
 
-  deploy-infrastructure:
+deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
     steps:
