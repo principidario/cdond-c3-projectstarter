@@ -125,7 +125,8 @@ jobs:
           paths: [frontend/node_modules]
           key: frontend-scan
 
-  scan-backend:
+
+scan-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -161,13 +162,13 @@ jobs:
           event: fail
 
 
-# deploy-infrastructure:
-#   docker:
-#     - image: amazon/aws-cli
-#   steps:
-#     - checkout
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
 #     - run:
-#         name: Install tar and qzip
+#         name: Install tar and qzip (not necesary)
 #         command: |
 #           yum -y install tar gzip
 #     - run:
@@ -177,7 +178,7 @@ jobs:
 #             --template-file .circleci/files/backend.yml \
 #             --tags project=udapeople \
 #             --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-#             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
+#             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
 #     - run:
 #         name: Ensure front-end infrastructure exist
 #         command: |
@@ -185,17 +186,20 @@ jobs:
 #             --template-file .circleci/files/frontend.yml \
 #             --tags project=udapeople \
 #             --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-#             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-#     - run:
-#         name: Add back-end ip to ansible inventory
-#         command: |
-#           aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query "Reservations[].Instances[].PublicDnsName" >> ~/project/.circleci/ansible/inventory.txt
-#     - persist_to_workspace:
-#         root: ~/
-#         paths:
-#           - project/.circleci/ansible/inventory.txt
+#             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+         name: Add back-end ip to ansible inventory
+         command: ||
+           export BACKEND_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-*" --query "Reservations[].Instances[].PublicDnsName[]" | grep ec2 | sed 's/\"//g' | sed 's/ //g')
+#           export BACKEND_IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query "Reservations[].Instances[].PublicDnsName[]" | grep ec2 | sed 's/\"//g' | sed 's/ //g')
+           echo $BACKEND_IP >> .circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
 #     - destroy-environment:
 #         workflow-id: ${CIRCLE_WORKFLOW_ID:0:7}
+
 
 # configure-infrastructure:
 #   docker:
