@@ -6,3 +6,6 @@
 - name: Install npm
   apt:
     name: npm
+- name: Install pm2
+  npm:
+    name: pm2
