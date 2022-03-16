@@ -220,7 +220,7 @@ jobs:
           name: Configure server
           command: |
               cd .circleci/ansible
-              ansible-playbook --private-key udacity.pem -i inventory.txt configure-server.yml
+              ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --private-key udacity.pem -i inventory.txt configure-server.yml
 #     # Here's where you will add some code to rollback on failure      
 #     #- destroy-environment:
 #     #workflow-id: ${CIRCLE_WORKFLOW_ID:0:7}
