@@ -227,18 +227,16 @@ jobs:
 
 
 
-#npm install typescript en main.cfg del role
-
-# run-migrations:
-#   docker:
-#     - image: circleci/node:13.8.0
-#   steps:
-#     - checkout
-#     - run:
-#         name: Run migrations
-#         command: |
-#            cd backend
-#           npm run migrations > migrations_dump.txt
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            npm run migrations > migrations_dump.txt
 #     - run:
 #         name: Send migration results to memstash
 #         command: |
@@ -421,10 +419,10 @@ workflows:
           #filters:
             #branches:
               #only: [test-feature-branch]
-      - configure-infrastructure
+      #- configure-infrastructure
       #- configure-infrastructure:
       #    requires: [deploy-infrastructure]
-      #- run-migrations
+      - run-migrations
       #- run-migrations:
       #    requires: [configure-infrastructure]
       #- deploy-frontend:
