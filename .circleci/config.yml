@@ -220,7 +220,7 @@ jobs:
           name: Configure server (Command runs OK in shell, but here say "cannot verify the authenticity of the host..do you want to continue?(yes/no)")
           command: |
               cd .circleci/ansible
-              echo yes | ansible-playbook --private-key udacity.pem -i inventory.txt configure-server.yml
+              ansible-playbook --private-key udacity.pem -i inventory.txt configure-server.yml
 #     # Here's where you will add some code to rollback on failure      
 #     #- destroy-environment:
 #     #workflow-id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -244,9 +244,8 @@ jobs:
             sudo ./aws/install
       - run:
           name: Run migrations
-          no_output_timeout: 30m
-          working_directory: ./backend
           command: |
+            cd backend
             npm install
             npm run migrations > migration.log
             export migration_status=$(cat migration.log | grep -c "has been executed successfully")
